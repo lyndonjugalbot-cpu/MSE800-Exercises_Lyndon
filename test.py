@@ -16,7 +16,6 @@ def factorial(n):
     for i in range(1, n + 1):
         result *= i
     print(f"Factorial of {i} is {result}")
-    print(f"Factorial of {i} is {result}")
     return result
 
 def main():
