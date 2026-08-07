@@ -1,6 +1,11 @@
 """
 BMI (Body Mass Index) Calculator - CLI.
 
+Usage:
+    python bmi.py --weight 70 --height 1.75
+    python bmi.py -w 70 -H 1.75 --unit metric
+    python bmi.py -w 154 -H 69 --unit imperial
+
 Run without arguments to be prompted interactively instead.
 """
 
@@ -50,6 +55,9 @@ class BMICategory(Enum):
     OVERWEIGHT = "Overweight"
     OBESE = "Obese"
 
+# Valid unit systems accepted throughout the program
+VALID_UNITS = ("metric", "imperial")
+
 def calculate_bmi(weight_kg: float, height_m: float):
     """Calculate BMI given weight in kilograms and height in metres."""
     if weight_kg <= 0 or height_m <= 0:
@@ -87,7 +95,7 @@ def parse_args(argv: list[str]):
         help="Height (m for metric, in for imperial).",
     )
     parser.add_argument(
-        "-u", "--unit", choices=["metric", "imperial"], default="metric",
+        "-u", "--unit", choices=list(VALID_UNITS), default="metric",
         help="Unit system for the supplied weight/height (default: metric).",
     )
     return parser.parse_args(argv)
@@ -95,18 +103,21 @@ def parse_args(argv: list[str]):
 def prompt_for_measurements():
     """Interactively prompt the user for unit, weight, and height."""
     unit = input("Unit system (metric/imperial) [Default: metric]: ").strip().lower() or "metric"
-    while unit not in ("metric", "imperial"):
+    while unit not in (VALID_UNITS):
         unit = input("Please enter 'metric' or 'imperial': ").strip().lower()
- 
-    weight_label = "Weight in kg: " if unit == "metric" else "Weight in lb: "
-    height_label = "Height in m: " if unit == "metric" else "Height in inches: "
+
+    if unit == "metric":
+        weight_label = "Weight in kg: "
+        height_label = "Height in m: "
+    else:
+        weight_label = "Weight in lb: "
+        height_label = "Height in inches: "
  
     weight = float(input(weight_label).strip())
     height = float(input(height_label).strip())
     return weight, height, unit
 
 
- 
  
 if __name__ == "__main__":
     main()
