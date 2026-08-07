@@ -1,11 +1,6 @@
 """
 BMI (Body Mass Index) Calculator - CLI.
 
-Usage:
-    python bmi.py --weight 70 --height 1.75
-    python bmi.py -w 70 -H 1.75 --unit metric
-    python bmi.py -w 154 -H 69 --unit imperial
-
 Run without arguments to be prompted interactively instead.
 """
 
@@ -45,7 +40,7 @@ def main():
         print(f"Error: {exc}", file=sys.stderr)
         sys.exit(1)
 
-        
+
 class BMICategory(Enum):
     """
     BMI weight categories.
@@ -99,7 +94,7 @@ def parse_args(argv: list[str]):
 
 def prompt_for_measurements():
     """Interactively prompt the user for unit, weight, and height."""
-    unit = input("Unit system (metric/imperial) [metric]: ").strip().lower() or "metric"
+    unit = input("Unit system (metric/imperial) [Default: metric]: ").strip().lower() or "metric"
     while unit not in ("metric", "imperial"):
         unit = input("Please enter 'metric' or 'imperial': ").strip().lower()
  
