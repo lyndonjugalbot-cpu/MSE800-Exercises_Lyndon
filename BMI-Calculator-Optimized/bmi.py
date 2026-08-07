@@ -43,9 +43,10 @@ def main():
   print("Hello, let's calculate your BMI.");
   
   calc = BMIcalculator()
-  print()
   calc.getdata()
   bmi=calc.calculate()
+
+  # .2f means 2 decimal places max
   print(f"Your BMI is {bmi: .2f}")
 
 if __name__ == "__main__":
