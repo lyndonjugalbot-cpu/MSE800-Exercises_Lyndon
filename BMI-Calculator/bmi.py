@@ -18,6 +18,34 @@ import sys
 "Enum lets us define a fixed set of named, readable categories"
 from enum import Enum
 
+
+def main(): 
+    """Entry point for the BMI calculator CLI."""
+    args = parse_args(sys.argv[1:])
+ 
+    try:
+        # Fall back to interactive prompts if weight/height weren't passed as flags
+        if args.weight is None or args.height is None:
+            weight, height, unit = prompt_for_measurements()
+        else:
+            weight, height, unit = args.weight, args.height, args.unit
+ 
+        if unit == "imperial":
+            weight, height = convert_imperial_to_metric(weight, height)
+ 
+        bmi = calculate_bmi(weight, height)
+        category = classify_bmi(bmi)
+ 
+        print(f"\nBMI: {bmi:.2f}")
+        # category is a BMICategory enum member, so we use .value to get
+        # the readable string (e.g. "Normal weight") for printing.
+        print(f"Category: {category.value}")
+ 
+    except ValueError as exc:
+        print(f"Error: {exc}", file=sys.stderr)
+        sys.exit(1)
+
+        
 class BMICategory(Enum):
     """
     BMI weight categories.
@@ -82,31 +110,7 @@ def prompt_for_measurements():
     height = float(input(height_label).strip())
     return weight, height, unit
 
-def main(): 
-    """Entry point for the BMI calculator CLI."""
-    args = parse_args(sys.argv[1:])
- 
-    try:
-        # Fall back to interactive prompts if weight/height weren't passed as flags
-        if args.weight is None or args.height is None:
-            weight, height, unit = prompt_for_measurements()
-        else:
-            weight, height, unit = args.weight, args.height, args.unit
- 
-        if unit == "imperial":
-            weight, height = convert_imperial_to_metric(weight, height)
- 
-        bmi = calculate_bmi(weight, height)
-        category = classify_bmi(bmi)
- 
-        print(f"\nBMI: {bmi:.2f}")
-        # category is a BMICategory enum member, so we use .value to get
-        # the readable string (e.g. "Normal weight") for printing.
-        print(f"Category: {category.value}")
- 
-    except ValueError as exc:
-        print(f"Error: {exc}", file=sys.stderr)
-        sys.exit(1)
+
  
  
 if __name__ == "__main__":
