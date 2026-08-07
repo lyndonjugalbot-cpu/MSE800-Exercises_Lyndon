@@ -4,7 +4,6 @@ BMI (Body Mass Index) Calculator - CLI.
 Usage:
     python bmi.py --weight 70 --height 1.75
     python bmi.py -w 70 -H 1.75 --unit metric
-    python bmi.py -w 154 -H 69 --unit imperial
 
 Run without arguments to be prompted interactively instead.
 """
@@ -26,12 +25,10 @@ def main():
     try:
         # Fall back to interactive prompts if weight/height weren't passed as flags
         if args.weight is None or args.height is None:
-            weight, height, unit = prompt_for_measurements()
+            weight, height = prompt_for_measurements()
         else:
-            weight, height, unit = args.weight, args.height, args.unit
+            weight, height = args.weight, args.height
  
-        if unit == "imperial":
-            weight, height = convert_imperial_to_metric(weight, height)
  
         bmi = calculate_bmi(weight, height)
         category = classify_bmi(bmi)
@@ -55,9 +52,6 @@ class BMICategory(Enum):
     OVERWEIGHT = "Overweight"
     OBESE = "Obese"
 
-# Valid unit systems accepted throughout the program
-VALID_UNITS = ("metric", "imperial")
-
 def calculate_bmi(weight_kg: float, height_m: float):
     """Calculate BMI given weight in kilograms and height in metres."""
     if weight_kg <= 0 or height_m <= 0:
@@ -75,11 +69,6 @@ def classify_bmi(bmi: float):
     else:
         return BMICategory.OBESE
 
-def convert_imperial_to_metric(weight_lb: float, height_in: float):
-    """Convert weight in pounds and height in inches to kilograms and metres."""
-    weight_kg = weight_lb * 0.45359237
-    height_m = height_in * 0.0254
-    return weight_kg, height_m
 
 def parse_args(argv: list[str]):
     """Parse command-line arguments."""
@@ -94,28 +83,19 @@ def parse_args(argv: list[str]):
         "-H", "--height", type=float, default=None,
         help="Height (m for metric, in for imperial).",
     )
-    parser.add_argument(
-        "-u", "--unit", choices=list(VALID_UNITS), default="metric",
-        help="Unit system for the supplied weight/height (default: metric).",
-    )
+  
     return parser.parse_args(argv)
 
 def prompt_for_measurements():
-    """Interactively prompt the user for unit, weight, and height."""
-    unit = input("Unit system (metric/imperial) [Default: metric]: ").strip().lower() or "metric"
-    while unit not in (VALID_UNITS):
-        unit = input("Please enter 'metric' or 'imperial': ").strip().lower()
+    """Interactively prompt the user for weight, and height."""
 
-    if unit == "metric":
-        weight_label = "Weight in kg: "
-        height_label = "Height in m: "
-    else:
-        weight_label = "Weight in lb: "
-        height_label = "Height in inches: "
+    weight_label = "Weight in kg: "
+    height_label = "Height in m: "
+
  
     weight = float(input(weight_label).strip())
     height = float(input(height_label).strip())
-    return weight, height, unit
+    return weight, height
 
 
  
