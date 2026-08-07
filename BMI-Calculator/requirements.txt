@@ -1,1 +1,1 @@
-# No third-party dependencies are required; bmi.py only uses the Python standard library.
+numpy==2.5.1
