@@ -2,16 +2,17 @@
 from students import StudentDetails
 from students import StudentInputs
 
-#returns the sort key for a student: their age
-def get_student_age(student):
-    return student.student_age
+
 
 #main function to get the student details and print them, sorted by age
 def main():
 
     #get how many number of students to be inputed.
     students = StudentInputs().get_num_students()
-    students.sort(key=get_student_age)
+
+     #sort the students by age, youngest first
+    students.sort(key=StudentInputs.get_student_age, reverse=False)
+   
 
     #print the student details, sorted by age
     print("\n" + "-" * 45)
