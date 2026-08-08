@@ -14,6 +14,8 @@ def main():
 
     #print the youngest student
     print(f"{students[0].student_name} is the youngest student.")
+
+    #print all the student details, sorted by age
     for student_details in students:
         print("-" * 45)
         print(f"Student Name: {student_details.student_name}")
