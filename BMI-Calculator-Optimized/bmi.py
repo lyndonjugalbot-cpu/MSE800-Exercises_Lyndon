@@ -22,21 +22,22 @@ def inputfloat(hint):
   return ret 
 
 class BMIcalculator:
-  def getdata(self):
+  def getdata( ):
     """
     Get weight in kgs and height in cms.
     Height is entered in cetimetres and stored in metres
     """
 
-    self.w = inputfloat("Please enter your weight in kilograms:")
-    self.h = inputfloat("Please enter your height in centimetres:")/100
+    w = inputfloat("Please enter your weight in kilograms:")
+    h = inputfloat("Please enter your height in centimetres:")/100
 
-  def calculate(self):
+  def calculate( ):
     """
     Calculate and return bmi
     """
 
-    return self.w/(self.h ** 2)
+    return getdata.w/(getdata.h ** 2)
+    #return self.w/(self.h ** 2)
 
 
 def main():
