@@ -10,7 +10,7 @@ def main():
     #get how many number of students to be inputed.
     students = StudentInputs().get_num_students()
 
-     #sort the students by age, youngest first
+     #sort the students by age, youngest first(reverse=False)
     students.sort(key=StudentInputs.get_student_age, reverse=False)
    
 
