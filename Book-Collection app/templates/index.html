@@ -114,6 +114,7 @@
     <h1>Book Collection</h1>
     <p class="subtitle">Add, remove, and search books in your collection.</p>
 
+    <!-- one-time status message set by flash() in app.py (e.g. "Added: ..."), shown once then cleared -->
     {% with messages = get_flashed_messages() %}
       {% if messages %}
         {% for message in messages %}
@@ -122,6 +123,7 @@
       {% endif %}
     {% endwith %}
 
+    <!-- form posts to the /add route in app.py, which calls collection.add_book() -->
     <div class="card">
       <h2>Add a book</h2>
       <form action="{{ url_for('add') }}" method="post">
@@ -131,6 +133,7 @@
       </form>
     </div>
 
+    <!-- form posts to the /remove route in app.py, which calls collection.remove_book() -->
     <div class="card">
       <h2>Remove a book</h2>
       <form action="{{ url_for('remove') }}" method="post">
@@ -139,12 +142,14 @@
       </form>
     </div>
 
+    <!-- GET form so the search term "q" appears in the URL; index() runs the search when q is set -->
     <div class="card">
       <h2>Search</h2>
       <form action="{{ url_for('index') }}" method="get">
         <input type="text" name="q" placeholder="Search by title" value="{{ query }}">
         <button type="submit">Search</button>
       </form>
+      <!-- results is None until a search has actually been run (see app.py index()) -->
       {% if results is not none %}
         <ul style="margin-top: 1rem;">
           {% for line in results %}
@@ -154,6 +159,7 @@
       {% endif %}
     </div>
 
+    <!-- full list of books currently in the collection, passed in as `books` -->
     <div class="card">
       <h2>All books <span class="count">({{ books|length }})</span></h2>
       {% if books %}
