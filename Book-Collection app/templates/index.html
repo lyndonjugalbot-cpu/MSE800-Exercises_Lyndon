@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Book Collection</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #f5f3ee;
+      --card: #ffffff;
+      --text: #23211d;
+      --muted: #6b675f;
+      --accent: #8a5a3b;
+      --accent-hover: #6f4730;
+      --border: #e2ddd2;
+      --danger: #b3492f;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Georgia", "Iowan Old Style", serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      padding: 2.5rem 1rem;
+    }
+    main {
+      width: 100%;
+      max-width: 640px;
+    }
+    h1 {
+      font-size: 1.9rem;
+      margin: 0 0 0.25rem;
+      letter-spacing: 0.02em;
+    }
+    .subtitle {
+      color: var(--muted);
+      margin: 0 0 2rem;
+      font-size: 0.95rem;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .card h2 {
+      margin: 0 0 1rem;
+      font-size: 1.1rem;
+    }
+    .flash {
+      background: #efe6d8;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      margin-bottom: 1.5rem;
+      font-size: 0.95rem;
+    }
+    form {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    input[type="text"] {
+      flex: 1 1 160px;
+      padding: 0.55rem 0.7rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 0.95rem;
+      font-family: inherit;
+      background: var(--bg);
+      color: var(--text);
+    }
+    button {
+      padding: 0.55rem 1.1rem;
+      border: none;
+      border-radius: 6px;
+      background: var(--accent);
+      color: #fff;
+      font-size: 0.95rem;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    button:hover { background: var(--accent-hover); }
+    button.danger { background: var(--danger); }
+    button.danger:hover { background: #8f3823; }
+    ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    li {
+      padding: 0.5rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.98rem;
+    }
+    li:last-child { border-bottom: none; }
+    .empty {
+      color: var(--muted);
+      font-style: italic;
+    }
+    .count {
+      color: var(--muted);
+      font-size: 0.85rem;
+      font-weight: normal;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Book Collection</h1>
+    <p class="subtitle">Add, remove, and search books in your collection.</p>
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for message in messages %}
+          <div class="flash">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <div class="card">
+      <h2>Add a book</h2>
+      <form action="{{ url_for('add') }}" method="post">
+        <input type="text" name="title" placeholder="Title" required>
+        <input type="text" name="author" placeholder="Author" required>
+        <button type="submit">Add</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <h2>Remove a book</h2>
+      <form action="{{ url_for('remove') }}" method="post">
+        <input type="text" name="title" placeholder="Title" required>
+        <button type="submit" class="danger">Remove</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <h2>Search</h2>
+      <form action="{{ url_for('index') }}" method="get">
+        <input type="text" name="q" placeholder="Search by title" value="{{ query }}">
+        <button type="submit">Search</button>
+      </form>
+      {% if results is not none %}
+        <ul style="margin-top: 1rem;">
+          {% for line in results %}
+            <li>{{ line }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+
+    <div class="card">
+      <h2>All books <span class="count">({{ books|length }})</span></h2>
+      {% if books %}
+        <ul>
+          {% for book in books %}
+            <li>{{ book.title }} by {{ book.author }}</li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="empty">No books in the collection.</p>
+      {% endif %}
+    </div>
+  </main>
+</body>
+</html>

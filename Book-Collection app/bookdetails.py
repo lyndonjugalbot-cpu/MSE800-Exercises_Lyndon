@@ -3,34 +3,27 @@
 class BookCollection:
     def __init__(self):
         self.books = []
-        self.add_book("Foundation", "Isaac Asimov")
 
     def add_book(self, title, author):
         if any(book["title"].lower() == title.lower() for book in self.books):
-            print(f"'{title}' is already in the collection.")
-            return
+            return f"'{title}' is already in the collection."
         self.books.append({"title": title, "author": author})
-        print(f"Added: {title} by {author}")
+        return f"Added: {title} by {author}"
 
     def remove_book(self, title):
         for book in self.books:
             if book["title"].lower() == title.lower():
                 self.books.remove(book)
-                print(f"Removed: {title}")
-                return
-        print("Book not found")
+                return f"Removed: {title}"
+        return "Book not found"
 
     def search_book(self, keyword):
         matches = [book for book in self.books if keyword.lower() in book["title"].lower()]
         if not matches:
-            print("Book not found")
-            return
-        for book in matches:
-            print(f"Book found: {book['title']} by {book['author']}")
+            return ["Book not found"]
+        return [f"Book found: {book['title']} by {book['author']}" for book in matches]
 
     def display_books(self):
         if not self.books:
-            print("No books in the collection.")
-            return
-        for book in self.books:
-            print(f"{book['title']} by {book['author']}")
+            return ["No books in the collection."]
+        return [f"{book['title']} by {book['author']}" for book in self.books]
