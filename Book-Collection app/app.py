@@ -12,6 +12,7 @@ from bookdetails import BookCollection
 
 # create the Flask application instance
 app = Flask(__name__)
+
 # secret_key is required by Flask to sign session cookies used for flash messages
 app.secret_key = "book-collection-secret-key"
 
