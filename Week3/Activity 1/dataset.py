@@ -26,4 +26,8 @@ class GetIrisData:
         # unique flower species
         flower_names = y.iloc[:, 0].unique()
         print("Total number of different flowers:", len(flower_names))
-        print("Names of all different flowers:", list(flower_names))
+        print("Total number of different flowers:", list(flower_names))
+
+
+
+        
