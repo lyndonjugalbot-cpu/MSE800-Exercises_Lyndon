@@ -1,8 +1,6 @@
 from ucimlrepo import fetch_ucirepo 
 
 class GetIrisData:
-    def __init__(self):
-        pass
 
     def get_data(self):
         # fetch dataset 
@@ -29,12 +27,3 @@ class GetIrisData:
         flower_names = y.iloc[:, 0].unique()
         print("Total number of different flowers:", len(flower_names))
         print("Names of all different flowers:", list(flower_names))
-
-
-def main():
-    iris_data = GetIrisData()
-    X, y = iris_data.get_data()
-    iris_data.unique_flowers(y)
-
-if __name__ == "__main__":
-    main()
