@@ -1,0 +1,74 @@
+A system keeps information about students, lecturers, subjects, and lectures. 
+Students can enroll lectures.
+Lecturers teach lectures for different subjects.
+
+
+Additional attributes:
+Student: gender, phone_number, email, student code(primary key)
+Enrollment: enrollment_status, enrollment_date, student code(primary key), lecture id(foreign key)
+Lecture: lecture id(primary key), subject code(foreign key), lecturer id(foreign id), capacity
+Lecturer: lecturer id(primary key), subject code(foreign key)
+Subject: subject code(primary key)
+
+Relationship:
+[Enrolls] - Student->Enrollment->Lecture
+    - The Student can enroll in available lectures and lectures can contain many students.
+    - One student to one lecture per enrollment process
+
+[Lectures] - Lecturer->Lecture->Subject
+    - The Lecturer can teach many lectures
+    - A subject can contain many lectures
+    - Each lecture is taught by a lecturer and belongs to one subject
+
+
+
+Student:
+-S_code(primary key)
+-F_name
+-L_name
+-NID
+-B_date
+-S_address
+-S_email
+-S_number
+-S_gender
+
+Enrollment:
+-S_code(primary key)
+-L_ID(primary key, foreign key)
+-student_code
+-Date_of_enrollment
+-Course_name
+-CC#
+-status
+
+Lecture:
+-L_ID (primary key)
+-Subj_code(foreign key)
+-Lecturer_ID(foreign key)
+-CC#
+-Subject
+-Time
+-Date
+-Lecture_name
+-L_room
+-capacity
+
+Lecturer:
+-Lecturer_ID(primary key)
+-subject_code(foreign key)
+-L_lastname
+-L_firstname
+-L_email
+-L-address
+
+Subjects:
+-subject_code(primary key)
+-subject_unit
+-subject_udsc
+
+
+Enrollment.s_code connects to Student.s_code.
+Enrollment.l_id connects to Lecture.l_id.
+Lecture.lecturer_id connects to Lecturer.lecturer_id.
+Lecture.subject_code connects to Subject.subject_code.
