@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS Subject (
     subject_unit INTEGER NOT NULL,
     subject_description TEXT
 );
+
 CREATE TABLE IF NOT EXISTS Lecturer (
     lecturer_id TEXT PRIMARY KEY,
     first_name TEXT NOT NULL,
@@ -17,6 +18,7 @@ CREATE TABLE IF NOT EXISTS Lecturer (
     email TEXT NOT NULL UNIQUE,
     address TEXT
 );
+
 CREATE TABLE IF NOT EXISTS Student (
     student_code TEXT PRIMARY KEY,
     first_name TEXT NOT NULL,
@@ -27,6 +29,7 @@ CREATE TABLE IF NOT EXISTS Student (
     email TEXT NOT NULL UNIQUE,
     phone_number TEXT
 );
+
 CREATE TABLE IF NOT EXISTS Lecture (
     lecture_id TEXT PRIMARY KEY,
     subject_code TEXT NOT NULL REFERENCES Subject(subject_code),
@@ -36,6 +39,7 @@ CREATE TABLE IF NOT EXISTS Lecture (
     day_time TEXT,
     capacity INTEGER NOT NULL
 );
+
 CREATE TABLE IF NOT EXISTS Enrollment (
     student_code TEXT NOT NULL REFERENCES Student(student_code),
     lecture_id TEXT NOT NULL REFERENCES Lecture(lecture_id),
@@ -43,6 +47,7 @@ CREATE TABLE IF NOT EXISTS Enrollment (
     enrollment_status TEXT NOT NULL DEFAULT 'active',
     PRIMARY KEY (student_code, lecture_id)
 );
+
 """
 
 
@@ -52,6 +57,7 @@ class Database:
 
     def connect(self):
         conn = sqlite3.connect(self.db_path)
+        #This PRAGMA turns on actual enforcement for this connection
         conn.execute("PRAGMA foreign_keys = ON")
         conn.row_factory = sqlite3.Row
         return conn

@@ -8,7 +8,7 @@ class GetIrisData:
   
         # data (as pandas dataframes) 
         X = iris.data.features 
-        y = iris.data.targets 
+        y = iris.data.targets
   
         # metadata 
         print("__" *50)
