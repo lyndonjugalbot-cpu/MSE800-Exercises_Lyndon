@@ -20,14 +20,40 @@
 
 ## Diagram
 
-```
-Currency (1) ──< ExchangeRate >── (1) Currency
-    (from_currency)                 (to_currency)
+```mermaid
+erDiagram
+    CURRENCY ||--o{ EXCHANGE_RATE : "from_currency"
+    CURRENCY ||--o{ EXCHANGE_RATE : "to_currency"
+    CUSTOMER ||--o{ EXCHANGE_TRANSACTION : makes
+    CURRENCY ||--o{ EXCHANGE_TRANSACTION : "from_currency"
+    CURRENCY ||--o{ EXCHANGE_TRANSACTION : "to_currency"
 
-Customer (1) ──< ExchangeTransaction
-                        │
-Currency (1) ──< ─┬─────┘
- (from_currency)   │
-Currency (1) ──< ──┘
- (to_currency)
+    CURRENCY {
+        string currency_code PK
+        string currency_name
+        string symbol
+    }
+    CUSTOMER {
+        string customer_id PK
+        string first_name
+        string last_name
+        string email
+        string phone_number
+    }
+    EXCHANGE_RATE {
+        string from_currency PK,FK
+        string to_currency PK,FK
+        float rate
+        string updated_date
+    }
+    EXCHANGE_TRANSACTION {
+        string transaction_id PK
+        string customer_id FK
+        string from_currency FK
+        string to_currency FK
+        float from_amount
+        float to_amount
+        float rate_applied
+        string transaction_date
+    }
 ```
