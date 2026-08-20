@@ -44,20 +44,21 @@ class Database:
         self.db_path = str(db_path)
 
     def connect(self):
-        conn = sqlite3.connect(self.db_path)
+        connection = sqlite3.connect(self.db_path)
         # This PRAGMA turns on actual foreign key enforcement for this connection
-        conn.execute("PRAGMA foreign_keys = ON")
-        conn.row_factory = sqlite3.Row
-        return conn
+        connection.execute("PRAGMA foreign_keys = ON")
+        connection.row_factory = sqlite3.Row
+        return connection
 
     def create_tables(self):
-        conn = self.connect()
-        conn.executescript(SCHEMA)
-        conn.commit()
-        conn.close()
+        connection = self.connect()
+        connection.executescript(SCHEMA)
+        connection.commit()
+        connection.close()
 
     def is_empty(self):
-        conn = self.connect()
-        n = conn.execute("SELECT COUNT(*) FROM Currency").fetchone()[0]
-        conn.close()
-        return n == 0
+        connection = self.connect()
+        number = connection.execute("SELECT COUNT(*) FROM Currency").fetchone()[0]
+        connection.close()
+        return number == 0
+    
