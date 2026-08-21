@@ -3,41 +3,6 @@ from pathlib import Path
 
 DB_PATH = Path(__file__).parent / "exchange.db"
 
-SCHEMA = """
-CREATE TABLE IF NOT EXISTS Currency (
-    currency_code TEXT PRIMARY KEY,
-    currency_name TEXT NOT NULL,
-    symbol TEXT
-);
-
-CREATE TABLE IF NOT EXISTS Customer (
-    customer_id TEXT PRIMARY KEY,
-    first_name TEXT NOT NULL,
-    last_name TEXT NOT NULL,
-    email TEXT NOT NULL UNIQUE,
-    phone_number TEXT
-);
-
-CREATE TABLE IF NOT EXISTS ExchangeRate (
-    from_currency TEXT NOT NULL REFERENCES Currency(currency_code),
-    to_currency TEXT NOT NULL REFERENCES Currency(currency_code),
-    rate REAL NOT NULL,
-    updated_date TEXT NOT NULL,
-    PRIMARY KEY (from_currency, to_currency)
-);
-
-CREATE TABLE IF NOT EXISTS ExchangeTransaction (
-    transaction_id TEXT PRIMARY KEY,
-    customer_id TEXT NOT NULL REFERENCES Customer(customer_id),
-    from_currency TEXT NOT NULL REFERENCES Currency(currency_code),
-    to_currency TEXT NOT NULL REFERENCES Currency(currency_code),
-    from_amount REAL NOT NULL,
-    to_amount REAL NOT NULL,
-    rate_applied REAL NOT NULL,
-    transaction_date TEXT NOT NULL
-);
-"""
-
 
 class Database:
     def __init__(self, db_path=DB_PATH):
@@ -52,13 +17,57 @@ class Database:
 
     def create_tables(self):
         connection = self.connect()
-        connection.executescript(SCHEMA)
+        cursor = connection.cursor()
+
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS Currency (
+                currency_code TEXT PRIMARY KEY,
+                currency_name TEXT NOT NULL,
+                symbol TEXT
+            )
+        """)
+
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS Customer (
+                customer_id TEXT PRIMARY KEY,
+                first_name TEXT NOT NULL,
+                last_name TEXT NOT NULL,
+                email TEXT NOT NULL UNIQUE,
+                phone_number TEXT
+            )
+        """)
+
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS ExchangeRate (
+                from_currency TEXT NOT NULL REFERENCES Currency(currency_code),
+                to_currency TEXT NOT NULL REFERENCES Currency(currency_code),
+                rate REAL NOT NULL,
+                updated_date TEXT NOT NULL,
+                PRIMARY KEY (from_currency, to_currency)
+            )
+        """)
+
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS ExchangeTransaction (
+                transaction_id TEXT PRIMARY KEY,
+                customer_id TEXT NOT NULL REFERENCES Customer(customer_id),
+                from_currency TEXT NOT NULL REFERENCES Currency(currency_code),
+                to_currency TEXT NOT NULL REFERENCES Currency(currency_code),
+                from_amount REAL NOT NULL,
+                to_amount REAL NOT NULL,
+                rate_applied REAL NOT NULL,
+                transaction_date TEXT NOT NULL
+            )
+        """)
+
         connection.commit()
         connection.close()
 
     def is_empty(self):
         connection = self.connect()
-        number = connection.execute("SELECT COUNT(*) FROM Currency").fetchone()[0]
+        cursor = connection.cursor()
+        cursor.execute("SELECT COUNT(*) FROM Currency")
+        number = cursor.fetchone()[0]
         connection.close()
         return number == 0
     

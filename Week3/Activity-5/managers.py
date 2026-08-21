@@ -4,13 +4,16 @@ class CurrencyManager:
 
     def add(self, code, name, symbol=None):
         connection = self.db.connect()
-        connection.execute("INSERT INTO Currency VALUES (?, ?, ?)", (code, name, symbol))
+        cursor = connection.cursor()
+        cursor.execute("INSERT INTO Currency VALUES (?, ?, ?)", (code, name, symbol))
         connection.commit()
         connection.close()
 
     def list(self):
         connection = self.db.connect()
-        rows = connection.execute("SELECT * FROM Currency").fetchall()
+        cursor = connection.cursor()
+        cursor.execute("SELECT * FROM Currency")
+        rows = cursor.fetchall()
         connection.close()
         return rows
 
@@ -21,13 +24,16 @@ class CustomerManager:
 
     def add(self, customer_id, first, last, email, phone=None):
         connection = self.db.connect()
-        connection.execute("INSERT INTO Customer VALUES (?, ?, ?, ?, ?)", (customer_id, first, last, email, phone))
+        cursor = connection.cursor()
+        cursor.execute("INSERT INTO Customer VALUES (?, ?, ?, ?, ?)", (customer_id, first, last, email, phone))
         connection.commit()
         connection.close()
 
     def list(self):
         connection = self.db.connect()
-        rows = connection.execute("SELECT * FROM Customer").fetchall()
+        cursor = connection.cursor()
+        cursor.execute("SELECT * FROM Customer")
+        rows = cursor.fetchall()
         connection.close()
         return rows
 
@@ -39,7 +45,8 @@ class ExchangeRateManager:
     def set_rate(self, from_currency, to_currency, rate, date):
         # INSERT OR REPLACE lets us update today's rate for a currency pair.
         connection = self.db.connect()
-        connection.execute(
+        cursor = connection.cursor()
+        cursor.execute(
             "INSERT OR REPLACE INTO ExchangeRate VALUES (?, ?, ?, ?)",
             (from_currency, to_currency, rate, date),
         )
@@ -48,16 +55,20 @@ class ExchangeRateManager:
 
     def get_rate(self, from_currency, to_currency):
         connection = self.db.connect()
-        row = connection.execute(
+        cursor = connection.cursor()
+        cursor.execute(
             "SELECT rate FROM ExchangeRate WHERE from_currency = ? AND to_currency = ?",
             (from_currency, to_currency),
-        ).fetchone()
+        )
+        row = cursor.fetchone()
         connection.close()
         return row["rate"] if row else None
 
     def list(self):
         connection = self.db.connect()
-        rows = connection.execute("SELECT * FROM ExchangeRate").fetchall()
+        cursor = connection.cursor()
+        cursor.execute("SELECT * FROM ExchangeRate")
+        rows = cursor.fetchall()
         connection.close()
         return rows
 
@@ -75,7 +86,8 @@ class TransactionManager:
 
         to_amount = round(from_amount * rate, 2)
         connection = self.db.connect()
-        connection.execute(
+        cursor = connection.cursor()
+        cursor.execute(
             "INSERT INTO ExchangeTransaction VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
             (transaction_id, customer_id, from_currency, to_currency, from_amount, to_amount, rate, date),
         )
@@ -85,33 +97,39 @@ class TransactionManager:
 
     def list(self):
         connection = self.db.connect()
-        rows = connection.execute("SELECT * FROM ExchangeTransaction").fetchall()
+        cursor = connection.cursor()
+        cursor.execute("SELECT * FROM ExchangeTransaction")
+        rows = cursor.fetchall()
         connection.close()
         return rows
 
     def most_active_customers(self):
         """Report: number of exchange transactions made by each customer."""
         connection = self.db.connect()
-        rows = connection.execute(
+        cursor = connection.cursor()
+        cursor.execute(
             """SELECT c.customer_id, c.first_name || ' ' || c.last_name AS full_name,
                       COUNT(t.transaction_id) AS transaction_count
                FROM Customer c
                JOIN ExchangeTransaction t ON t.customer_id = c.customer_id
                GROUP BY c.customer_id
                ORDER BY transaction_count DESC"""
-        ).fetchall()
+        )
+        rows = cursor.fetchall()
         connection.close()
         return rows
 
     def total_bought_per_currency(self):
         """Report: total amount of each currency purchased (to_currency) across all transactions."""
         connection = self.db.connect()
-        rows = connection.execute(
+        cursor = connection.cursor()
+        cursor.execute(
             """SELECT t.to_currency, cur.currency_name, SUM(t.to_amount) AS total_amount
                FROM ExchangeTransaction t
                JOIN Currency cur ON cur.currency_code = t.to_currency
                GROUP BY t.to_currency
                ORDER BY total_amount DESC"""
-        ).fetchall()
+        )
+        rows = cursor.fetchall()
         connection.close()
         return rows
